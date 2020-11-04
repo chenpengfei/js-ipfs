@@ -16,6 +16,7 @@
     "test:external": "lerna run test:external",
     "test:cli": "lerna run test:cli",
     "test:interop": "lerna run test:interop",
+    "test:interface:client": "lerna run test:interface:client",
     "test:interface:core": "lerna run test:interface:core",
     "test:interface:http-go": "lerna run test:interface:http-go",
     "test:interface:http-js": "lerna run test:interface:http-js",
