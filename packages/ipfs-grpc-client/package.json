@@ -39,8 +39,6 @@
     "dep-check": "aegir dep-check -i aegir -i typescript -i rimraf -i ipfs-grpc-protocol"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.2.0",
-    "@grpc/proto-loader": "^0.5.5",
     "@improbable-eng/grpc-web": "^0.13.0",
     "change-case": "^4.1.1",
     "cids": "^1.0.0",
@@ -49,6 +47,7 @@
     "ipfs-core-utils": "^0.5.0",
     "ipfs-grpc-protocol": "0.0.0",
     "it-pushable": "^1.4.0",
+    "protobufjs": "^6.10.2",
     "multiaddr": "^8.0.0",
     "ws": "^7.3.1"
   },

@@ -1,26 +1,12 @@
 'use strict'
 
-const grpcJs = require('@grpc/grpc-js')
-const protoLoader = require('@grpc/proto-loader')
-const { grpc } = require('@improbable-eng/grpc-web')
 const transport = require('./grpc/transport')
 const toUrlString = require('ipfs-core-utils/src/to-url-string')
-const serviceAdaptor = require('./utils/service-adapter')
-
+const loadServices = require('./utils/load-services')
+const { grpc } = require('@improbable-eng/grpc-web')
 grpc.setDefaultTransport(transport())
 
-const packageDefinition = protoLoader.loadSync(
-  require.resolve('ipfs-grpc-protocol/src/root.proto'), {
-    keepCase: false,
-    longs: String,
-    enums: String,
-    defaults: false,
-    oneofs: true
-  }
-)
-
-const protoDescriptor = grpcJs.loadPackageDefinition(packageDefinition)
-const service = serviceAdaptor(protoDescriptor.ipfs)
+const service = loadServices()
 
 const protocols = {
   'ws://': 'http://',
@@ -31,6 +17,7 @@ module.exports = function createClient (opts = {}) {
   opts = opts || {}
   opts.url = toUrlString(opts.url)
 
+  // @improbable-eng/grpc-web requires http:// protocol URLs, not ws://
   Object.keys(protocols).forEach(protocol => {
     if (opts.url.startsWith(protocol)) {
       opts.url = protocols[protocol] + opts.url.substring(protocol.length)

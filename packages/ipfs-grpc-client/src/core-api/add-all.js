@@ -78,7 +78,8 @@ module.exports = function grpcAddAll (grpc, service, opts = {}) {
       sink
     } = bidiToDuplex(grpc, service, {
       host: opts.url,
-      debug: Boolean(process.env.DEBUG)
+      debug: Boolean(process.env.DEBUG),
+      metadata: options
     })
 
     setTimeout(() => {
