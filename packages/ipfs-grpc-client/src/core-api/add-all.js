@@ -32,7 +32,8 @@ async function sendFile (index, source, content, path, mode, mtime) {
     }
 
     if (mtime) {
-      message.mtime = mtime
+      message.mtime = mtime.secs
+      message.mtimeNsecs = mtime.nsecs
     }
 
     if (mode != null) {
@@ -108,8 +109,8 @@ module.exports = function grpcAddAll (grpc, service, opts = {}) {
         cid: new CID(result.cid),
         mode: result.mode,
         mtime: {
-          secs: result.mtime,
-          nsecs: result.mtimeNsecs
+          secs: result.mtime || 0,
+          nsecs: result.mtimeNsecs || 0
         },
         size: result.size
       }
