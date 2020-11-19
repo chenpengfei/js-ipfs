@@ -7,7 +7,7 @@ const { expect } = require('aegir/utils/chai')
 const all = require('it-all')
 const drain = require('it-drain')
 
-describe('id', () => {
+describe('Root.id', () => {
   let ipfs
   let socket
 
@@ -27,7 +27,7 @@ describe('id', () => {
     channel.clientSend({})
     channel.clientEnd()
 
-    const messages = await all(channel.sink)
+    const messages = await all(channel.clientSink)
     expect(messages).to.have.lengthOf(1)
     expect(messages).to.have.nested.property('[0]', id)
   })
@@ -46,7 +46,7 @@ describe('id', () => {
     })
     channel.clientEnd()
 
-    const messages = await all(channel.sink)
+    const messages = await all(channel.clientSink)
     expect(messages).to.have.lengthOf(1)
     expect(messages).to.have.nested.property('[0]', id)
   })
@@ -60,6 +60,6 @@ describe('id', () => {
     channel.clientSend({})
     channel.clientEnd()
 
-    await expect(drain(channel.sink)).to.eventually.be.rejectedWith(/halp!/)
+    await expect(drain(channel.clientSink)).to.eventually.be.rejectedWith(/halp!/)
   })
 })

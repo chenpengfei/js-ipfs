@@ -1,36 +1,29 @@
 'use strict'
 
 const grpc = require('@grpc/grpc-js')
-const protoLoader = require('@grpc/proto-loader')
 const first = require('it-first')
 const debug = require('debug')('ipfs:grpc-server')
 const webSocketServer = require('./utils/web-socket-server')
-const errCode = require('err-code')
+const loadServices = require('./utils/load-services')
 
-const packageDefinition = protoLoader.loadSync(
-  require.resolve('ipfs-grpc-protocol/src/root.proto'), {
-    keepCase: false,
-    longs: String,
-    enums: String,
-    defaults: false,
-    oneofs: true
-  }
-)
-
-const protoDescriptor = grpc.loadPackageDefinition(packageDefinition)
 const {
-  // @ts-ignore
-  Root
-} = protoDescriptor.ipfs
+  Root,
+  MFS
+} = loadServices()
 
 module.exports = async function createServer (ipfs, options = {}) {
   options = options || {}
 
   const server = new grpc.Server()
-  server.addService(Root.service, {
-    addAll: require('./core-api/add-all')(ipfs, options),
+  server.addService(Root, {
+    add: require('./endpoints/add')(ipfs, options),
     // @ts-ignore
-    id: require('./core-api/id')(ipfs, options)
+    id: require('./endpoints/id')(ipfs, options)
+  })
+  server.addService(MFS, {
+    ls: require('./endpoints/mfs/ls')(ipfs, options),
+    // @ts-ignore
+    write: require('./endpoints/mfs/write')(ipfs, options)
   })
 
   const socket = options.socket || await webSocketServer(ipfs, options)
@@ -65,7 +58,7 @@ module.exports = async function createServer (ipfs, options = {}) {
       case 'unary':
         handler.func(await first(channel.source), metadata, (err, value, metadata, flags) => {
           if (err) {
-            return channel.end(errCode(new Error(err.message || err.details), err.code, err))
+            return channel.end(err)
           }
 
           channel.sendMetadata(metadata || {})
@@ -80,7 +73,7 @@ module.exports = async function createServer (ipfs, options = {}) {
       case 'clientStream':
         handler.func(channel.source, metadata, (err, value, metadata, flags) => {
           if (err) {
-            return channel.end(errCode(new Error(err.message || err.details), err.code, err))
+            return channel.end(err)
           }
 
           channel.sendMetadata(metadata || {})

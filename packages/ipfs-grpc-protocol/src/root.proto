@@ -1,15 +1,12 @@
 syntax = "proto3";
 
+import "common.proto";
+
 package ipfs;
 
 service Root {
     rpc id (IdRequest) returns (IdResponse) {}
-    rpc addAll (stream AddRequest) returns (stream AddResponse) {}
-}
-
-enum FileType {
-    DIRECTORY = 0;
-    FILE = 1;
+    rpc add (stream AddRequest) returns (stream AddResponse) {}
 }
 
 enum AddResponseType {

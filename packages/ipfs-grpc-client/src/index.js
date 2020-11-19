@@ -25,8 +25,12 @@ module.exports = function createClient (opts = {}) {
   })
 
   const client = {
-    addAll: require('./core-api/add-all')(grpc, service.Root.addAll, opts),
-    id: require('./core-api/id')(grpc, service.Root.id, opts)
+    addAll: require('./core-api/add-all')(grpc, service.Root.add, opts),
+    id: require('./core-api/id')(grpc, service.Root.id, opts),
+    files: {
+      ls: require('./core-api/files/ls')(grpc, service.MFS.ls, opts),
+      write: require('./core-api/files/write')(grpc, service.MFS.write, opts)
+    }
   }
 
   return client

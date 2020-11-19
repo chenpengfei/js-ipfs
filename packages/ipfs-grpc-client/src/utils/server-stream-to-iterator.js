@@ -1,6 +1,5 @@
 'use strict'
 
-const first = require('it-first')
 const bidiToDuplex = require('./bidi-to-duplex')
 
 /**
@@ -11,14 +10,14 @@ const bidiToDuplex = require('./bidi-to-duplex')
  * @param {string} options.host - The remote host
  * @param {boolean} [options.debug] - Whether to print debug messages
  * @param {object} [options.metadata] - Metadata sent as headers
- * @returns {Promise<Object>} - A promise that resolves to a response object
+ * @returns {AsyncIterable<object>}
  **/
-module.exports = function unaryToPromise (grpc, service, request, options) {
+module.exports = function serverStreamToIterator (grpc, service, request, options) {
   const {
     source, sink
   } = bidiToDuplex(grpc, service, options)
 
   source.push(request)
 
-  return first(sink)
+  return sink
 }

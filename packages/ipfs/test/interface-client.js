@@ -2,12 +2,53 @@
 'use strict'
 
 const tests = require('interface-ipfs-core')
+const { isNode } = require('ipfs-utils/src/env')
 const factory = require('./utils/factory')
 
 describe('interface-ipfs-core ipfs-client tests', () => {
   const commonFactory = factory({
     type: 'js',
     ipfsClientModule: require('ipfs-client')
+  })
+
+  tests.files(commonFactory, {
+    skip: [{
+      name: '.files.chmod',
+      reason: 'not implemented'
+    }, {
+      name: '.files.cp',
+      reason: 'not implemented'
+    }, {
+      name: '.files.mkdir',
+      reason: 'not implemented'
+    }, {
+      name: '.files.stat',
+      reason: 'not implemented'
+    }, {
+      name: '.files.touch',
+      reason: 'not implemented'
+    }, {
+      name: '.files.rm',
+      reason: 'not implemented'
+    }, {
+      name: '.files.read',
+      reason: 'not implemented'
+    }, {
+      name: '.files.mv',
+      reason: 'not implemented'
+    }, {
+      name: '.files.flush',
+      reason: 'not implemented'
+    }].concat(isNode ? [] : [{
+      name: 'should make directory and specify mtime as hrtime',
+      reason: 'Not designed to run in the browser'
+    }, {
+      name: 'should set mtime as hrtime',
+      reason: 'Not designed to run in the browser'
+    }, {
+      name: 'should write file and specify mtime as hrtime',
+      reason: 'Not designed to run in the browser'
+    }])
   })
 
   tests.root(commonFactory, {

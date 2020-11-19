@@ -47,7 +47,15 @@ module.exports = function loadServices () {
               },
               deserializeBinary: (buf) => {
                 const message = method.resolvedRequestType.decode(buf)
-                return method.resolvedRequestType.toObject(message, CONVERSION_OPTS)
+                const obj = method.resolvedRequestType.toObject(message, CONVERSION_OPTS)
+
+                Object.defineProperty(obj, 'toObject', {
+                  enumerable: false,
+                  configurable: false,
+                  value: () => obj
+                })
+
+                return obj
               }
             },
             responseType: {
@@ -57,7 +65,15 @@ module.exports = function loadServices () {
               },
               deserializeBinary: (buf) => {
                 const message = method.resolvedResponseType.decode(buf)
-                return method.resolvedResponseType.toObject(message, CONVERSION_OPTS)
+                const obj = method.resolvedResponseType.toObject(message, CONVERSION_OPTS)
+
+                Object.defineProperty(obj, 'toObject', {
+                  enumerable: false,
+                  configurable: false,
+                  value: () => obj
+                })
+
+                return obj
               }
             }
           }

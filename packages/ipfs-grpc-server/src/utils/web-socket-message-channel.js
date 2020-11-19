@@ -29,6 +29,7 @@ const objectToHeaders = (object) => {
 
   return Buffer.from(
     Object.entries(object)
+      .filter(([, value]) => value != null)
       .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
       .join('\r\n')
   )
@@ -128,14 +129,7 @@ class WebsocketMessageChannel {
   }
 
   end (err) {
-    if (err) {
-      if (err instanceof Error) {
-        this.sendTrailer(err)
-      } else {
-        this.sendMessage(err)
-      }
-    }
-
+    this.sendTrailer(err)
     this.source.end()
     this.sink.end()
     this._ws.close()

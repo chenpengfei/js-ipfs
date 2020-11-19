@@ -6,6 +6,8 @@ class MessageChannel {
   constructor () {
     this.source = pushable()
     this.sink = pushable()
+
+    this.clientSink = pushable()
   }
 
   sendMetadata (metadata) {
@@ -13,7 +15,9 @@ class MessageChannel {
   }
 
   sendMessage (message) {
-    this.sink.push(message)
+    setTimeout(() => {
+      this.clientSink.push(message)
+    }, 0)
   }
 
   sendTrailers (trailers) {
@@ -21,15 +25,21 @@ class MessageChannel {
   }
 
   end (error) {
-    this.sink.end(error)
+    setTimeout(() => {
+      this.clientSink.end(error)
+    }, 0)
   }
 
   clientSend (message) {
-    this.source.push(message)
+    setTimeout(() => {
+      this.source.push(message)
+    }, 0)
   }
 
   clientEnd (err) {
-    this.source.end(err)
+    setTimeout(() => {
+      this.source.end(err)
+    }, 0)
   }
 }
 

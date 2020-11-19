@@ -13,8 +13,7 @@ module.exports = function grpcId (grpc, service, opts = {}) {
       peerId: options.peerId
     }
 
-    const res = await unaryToPromise(grpc, service, {
-      request,
+    const res = await unaryToPromise(grpc, service, request, {
       host: opts.url,
       metadata: toHeaders(options)
     })

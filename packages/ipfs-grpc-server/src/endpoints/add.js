@@ -5,7 +5,7 @@ const pushable = require('it-pushable')
 const { pipe } = require('it-pipe')
 
 module.exports = function grpcAdd (ipfs, options = {}) {
-  async function addAll (source, sink, metadata) {
+  async function add (source, sink, metadata) {
     const opts = {
       ...metadata,
       progress: (bytes = 0, path = '') => {
@@ -110,5 +110,5 @@ module.exports = function grpcAdd (ipfs, options = {}) {
     )
   }
 
-  return addAll
+  return add
 }
